@@ -42,6 +42,10 @@ END
 	return $self;
 }
 
+sub minimum_pxs {
+	return '3.50';
+}
+
 1;
 
 # ABSTRACT: Typemap for storing objects in magic
