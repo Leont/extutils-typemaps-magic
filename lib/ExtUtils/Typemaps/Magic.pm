@@ -65,31 +65,29 @@ sub minimum_pxs {
 
 =head1 DESCRIPTION
 
-C<ExtUtils::Typemaps::Magic> is an C<ExtUtils::Typemaps> subclass that provides two magic based mappings for objects.
+C<ExtUtils::Typemaps::Magic> is an C<ExtUtils::Typemaps> subclass that provides three magic based mappings for objects:
 
 =head2 T_MAGIC
 
-This is essentially a drop-in replacement for C<T_PTROBJ>, except that it hides the value of the pointer from pure-perl code by storing it in attached magic. In particular that means the pointer won't be serialized/deserialized (this is usually a thing because after deserialization the pointer is probably not valid).
+This is essentially a drop-in replacement for C<T_PTROBJ>, except that it hides the value of the pointer from pure-perl code by storing it in attached magic. In particular that means the pointer won't be serialized/deserialized (this is usually a thing because after deserialization the pointer is probably not valid). Note that like C<T_PTROBJ>, you probably need a C<DESTROY> method to destroy and free the buffer. Like C<T_PTROBJ> and friends, this is not thread cloning safe without further measures.
 
 =head2 T_MAGICEXT
 
 This stores the object just like C<T_MAGIC> does, but additionally attaches a magic vtable (type C<MGVTBL>) with the name C<${type}_magic> (e.g. C<Foo__Bar_magic> for a value of type C<Foo::Bar>) to the value. This is mainly useful for adding C<free> (destruction) and C<dup> (thread cloning) callbacks. The details of how these work is explained in L<perlguts|perlguts>, but it might look something like this:
 
  static int object_dup(pTHX_ MAGIC* magic, CLONE_PARAMS* params) {
-     PERL_UNUSED_VAR(params);
      object_refcount_increment((struct Object*)magic->mg_ptr);
      return 0;
  }
 
  static int object_free(pTHX_ SV* sv, MAGIC* magic) {
-     PERL_UNUSED_VAR(sv);
      object_refcount_decrement((struct Object*)magic->mg_ptr);
      return 0;
  }
 
  static const MGVTBL My__Object_magic = { NULL, NULL, NULL, NULL, object_free, NULL, object_dup, NULL };
 
-This is useful to create objects that handle thread cloning correctly and effectively.
+This is useful to create objects that handle thread cloning correctly and effectively. The object should be allocated with the C<PerlSharedMem_malloc> family of allocators.
 
 =head1 DEPENDENCIES
 
