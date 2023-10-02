@@ -21,9 +21,11 @@ sub new {
 END
 
 	$self->add_inputmap(xstype => 'T_MAGIC', code => sprintf $input, 'NULL');
+	$self->add_inputmap(xstype => 'T_MAGICBUF', code => sprintf $input, 'NULL');
 	$self->add_inputmap(xstype => 'T_MAGICEXT', code => sprintf $input, '&${type}_magic');
 
 	$self->add_outputmap(xstype => 'T_MAGIC', code => '	sv_magic(newSVrv($arg, \"${ntype}\"), NULL, PERL_MAGIC_ext, (const char*)$var, 0);');
+	$self->add_outputmap(xstype => 'T_MAGICBUF', code => '	sv_magic(newSVrv($arg, \"${ntype}\"), NULL, PERL_MAGIC_ext, (const char*)$var, sizeof(*$var));');
 
 	$self->add_outputmap(xstype => 'T_MAGICEXT', code => <<'END');
 	{
@@ -63,6 +65,10 @@ C<ExtUtils::Typemaps::Magic> is an C<ExtUtils::Typemaps> subclass that provides 
 =head2 T_MAGIC
 
 This is essentially a drop-in replacement for C<T_PTROBJ>, except that it hides the value of the pointer from pure-perl code by storing it in attached magic. In particular that means the pointer won't be serialized/deserialized (this is usually a thing because after deserialization the pointer is probably not valid). Note that like C<T_PTROBJ>, you probably need a C<DESTROY> method to destroy and free the buffer. Like C<T_PTROBJ> and friends, this is not thread cloning safe without further measures.
+
+=head2 T_MAGICBUF
+
+This is equivalent of using a string reference to store your object in, except it is hidden away using magic. This is suitable for objects that can be safely shallow copied on thread cloning (i.e. they don't contain external references such as pointers or file descriptors). Unlike C<T_MAGIC> or C<T_PTROBJ> this does not need a C<DESTROY> method to free the buffer.
 
 =head2 T_MAGICEXT
 
