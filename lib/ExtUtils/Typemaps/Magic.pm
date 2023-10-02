@@ -10,9 +10,9 @@ sub new {
 
 	my $self = $class->SUPER::new(@_);
 
-	$self->add_inputmap(xstype => 'T_MAGIC', code => <<'END');
+	my $input = <<'END';
 	{
-	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_findext(SvRV($arg), PERL_MAGIC_ext, NULL) : NULL;
+	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_findext(SvRV($arg), PERL_MAGIC_ext, %s) : NULL;
 	if (magic)
 		$var = (${type})magic->mg_ptr;
 	else
@@ -20,15 +20,8 @@ sub new {
 	}
 END
 
-	$self->add_inputmap(xstype => 'T_MAGICEXT', code => <<'END');
-	{
-	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_findext(SvRV($arg), PERL_MAGIC_ext, &${type}_magic) : NULL;
-	if (magic)
-		$var = (${type})magic->mg_ptr;
-	else
-		Perl_croak(aTHX_ \"${ntype} object is lacking magic\");
-	}
-END
+	$self->add_inputmap(xstype => 'T_MAGIC', code => sprintf $input, 'NULL');
+	$self->add_inputmap(xstype => 'T_MAGICEXT', code => sprintf $input, '&${type}_magic');
 
 	$self->add_outputmap(xstype => 'T_MAGIC', code => '	sv_magic(newSVrv($arg, \"${ntype}\"), NULL, PERL_MAGIC_ext, (const char*)$var, 0);');
 
