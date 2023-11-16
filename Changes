@@ -1,6 +1,7 @@
 Revision history for ExtUtils-Typemaps-Magic
 
 {{$NEXT}}
+          - Split dist into a module for every typemap
 
 0.003     2023-10-04 00:21:00+02:00 Europe/Brussels
           - Add T_MAGICBUF typemap

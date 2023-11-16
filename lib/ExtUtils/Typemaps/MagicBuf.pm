@@ -1,4 +1,4 @@
-package ExtUtils::Typemaps::Magic;
+package ExtUtils::Typemaps::MagicBuf;
 
 use strict;
 use warnings;
@@ -9,7 +9,7 @@ sub new {
 	my $class = shift;
 	my $self = $class->SUPER::new(@_);
 
-	$self->add_inputmap(xstype => 'T_MAGIC', code => <<'END');
+	$self->add_inputmap(xstype => 'T_MAGICBUF', code =>  <<'END');
 	{
 	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_findext(SvRV($arg), PERL_MAGIC_ext, NULL) : NULL;
 	if (magic)
@@ -19,7 +19,7 @@ sub new {
 	}
 END
 
-	$self->add_outputmap(xstype => 'T_MAGIC', code => '	sv_magic(newSVrv($arg, \"${ntype}\"), NULL, PERL_MAGIC_ext, (const char*)$var, 0);');
+	$self->add_outputmap(xstype => 'T_MAGICBUF', code => '	sv_magic(newSVrv($arg, \"${ntype}\"), NULL, PERL_MAGIC_ext, (const char*)$var, sizeof(*$var));');
 
 	return $self;
 }
@@ -30,12 +30,12 @@ END
 
 =head1 SYNOPSIS
 
- use ExtUtils::Typemaps::Magic;
+ use ExtUtils::Typemaps::MagicBuf;
  # First, read my own type maps:
  my $private_map = ExtUtils::Typemaps->new(file => 'my.map');
 
  # Then, get the Magic set and merge it into my maps
- my $map = ExtUtils::Typemaps::Magic->new;
+ my $map = ExtUtils::Typemaps::MagicBuf->new;
  $private_map->merge(typemap => $map);
 
  # Now, write the combined map to an output file
@@ -43,7 +43,7 @@ END
 
 =head1 DESCRIPTION
 
-C<ExtUtils::Typemaps::Magic> is an C<ExtUtils::Typemaps> subclass that is essentially a drop-in replacement for C<T_PTROBJ>, except that it hides the value of the pointer from pure-perl code by storing it in attached magic. In particular that means the pointer won't be serialized/deserialized (this is usually a thing because after deserialization the pointer is probably not valid). Note that like C<T_PTROBJ>, you probably need a C<DESTROY> method to destroy and free the buffer, and this is not thread cloning safe without further measures.
+C<ExtUtils::Typemaps::MagicBuf> is an C<ExtUtils::Typemaps> subclass that is the equivalent of using a string reference to store your object in, except it is hidden away using magic. This is suitable for objects that can be safely shallow copied on thread cloning (i.e. they don't contain external references such as pointers or file descriptors). Unlike C<T_MAGIC> or C<T_PTROBJ> this does not need a C<DESTROY> method to free the buffer.
 
 =head1 DEPENDENCIES
 
