@@ -72,4 +72,7 @@ This is useful to create objects that handle thread cloning correctly and effect
 
 This typemap requires L<ExtUtils::ParseXS|ExtUtils::ParseXS> C<3.50> or higher as a build dependency.
 
-On perls older than C<5.14>, this will require F<ppport.h> to provide C<mg_findext>.
+On perls older than C<5.14>, this will require F<ppport.h> to provide C<mg_findext>. E.g.
+
+ #define NEED_mg_findext
+ #include "ppport.h"
