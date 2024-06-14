@@ -88,3 +88,17 @@ If your module supports perls older than C<5.14>, it is recommended to include F
 
  #define NEED_mg_findext
  #include "ppport.h"
+
+=head1 INCLUSION
+
+To use this typemap template you need to include it into your local typemap. The easiest way to do that is to use the L<typemap> script in L<App::typemap>. E.g.
+
+ typemap --merge ExtUtils::Typemaps::MagicExt
+
+If you author using C<Dist::Zilla> you can use L<Dist::Zilla::Plugin::Typemap> instead.
+
+Alternatively, you can include it at runtime by adding the following to your XS file:
+
+ INCLUDE_COMMAND: $^X -MExtUtils::Typemaps::Cmd -e "print embeddable_typemap('MagicExt')"
+
+That does require adding a build time dependency on this module.
