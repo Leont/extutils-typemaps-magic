@@ -11,7 +11,11 @@ sub new {
 
 	$self->add_inputmap(xstype => 'T_MAGICEXT', code => <<'END');
 	{
+	%:ifdef mg_findext
 	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_findext(SvRV($arg), PERL_MAGIC_ext, &${type}_magic) : NULL;
+	%:else
+	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_find(SvRV($arg), PERL_MAGIC_ext) : NULL;
+	%:end
 	if (magic)
 		$var = (${type})magic->mg_ptr;
 	else
@@ -80,7 +84,7 @@ This is useful to create objects that handle thread cloning correctly and effect
 
 This typemap requires L<ExtUtils::ParseXS|ExtUtils::ParseXS> C<3.50> or higher as a build dependency.
 
-On perls older than C<5.14>, this will require F<ppport.h> to provide C<mg_findext>. E.g.
+If your module supports perls older than C<5.14>, it is recommended to include F<ppport.h> to provide C<mg_findext>. E.g.
 
  #define NEED_mg_findext
  #include "ppport.h"

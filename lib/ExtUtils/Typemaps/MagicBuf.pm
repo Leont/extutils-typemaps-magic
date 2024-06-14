@@ -11,7 +11,11 @@ sub new {
 
 	$self->add_inputmap(xstype => 'T_MAGICBUF', code =>  <<'END');
 	{
+	%:ifdef mg_findext
 	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_findext(SvRV($arg), PERL_MAGIC_ext, NULL) : NULL;
+	%:else
+	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_find(SvRV($arg), PERL_MAGIC_ext) : NULL;
+	%:end
 	if (magic)
 		$var = (${type})magic->mg_ptr;
 	else
@@ -50,7 +54,7 @@ C<ExtUtils::Typemaps::MagicBuf> is an C<ExtUtils::Typemaps> subclass that is the
 
 =head1 DEPENDENCIES
 
-On perls older than C<5.14>, this will require F<ppport.h> to provide C<mg_findext>. E.g.
+If your module supports perls older than C<5.14>, it is recommended to include F<ppport.h> to provide C<mg_findext>. E.g.
 
  #define NEED_mg_findext
  #include "ppport.h"
