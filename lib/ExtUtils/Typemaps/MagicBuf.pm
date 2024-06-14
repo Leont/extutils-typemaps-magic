@@ -30,16 +30,19 @@ END
 
 =head1 SYNOPSIS
 
- use ExtUtils::Typemaps::MagicBuf;
- # First, read my own type maps:
- my $private_map = ExtUtils::Typemaps->new(file => 'my.map');
+In your typemap
 
- # Then, get the Magic set and merge it into my maps
- my $map = ExtUtils::Typemaps::MagicBuf->new;
- $private_map->merge(typemap => $map);
+ My::Object	T_MAGICBUF
 
- # Now, write the combined map to an output file
- $private_map->write(file => 'typemap');
+In your XS:
+
+ typedef struct object_t* My__Object;
+
+ MODULE = My::Object    PACKAGE = My::Object    PREFIX = object_
+
+ My::Object object_new(int argument)
+
+ int object_baz(My::Object self)
 
 =head1 DESCRIPTION
 

@@ -39,32 +39,40 @@ sub minimum_pxs {
 
 =head1 SYNOPSIS
 
- use ExtUtils::Typemaps::MagicExt;
- # First, read my own type maps:
- my $private_map = ExtUtils::Typemaps->new(file => 'my.map');
+In your typemap
 
- # Then, get the Magic set and merge it into my maps
- my $map = ExtUtils::Typemaps::MagicExt->new;
- $private_map->merge(typemap => $map);
+ My::Object	T_MAGICEXT
 
- # Now, write the combined map to an output file
- $private_map->write(file => 'typemap');
+In your XS:
+
+ static const MGVTBL My__Object_magic = {
+     .svt_dup  = object_dup,
+     .svt_free = object_free
+ };
+
+ typedef struct object_t* My__Object;
+
+ MODULE = My::Object    PACKAGE = My::Object    PREFIX = object_
+
+ My::Object object_new(int argument)
+
+ int object_baz(My::Object self)
 
 =head1 DESCRIPTION
 
-C<ExtUtils::Typemaps::MagicExt> is an C<ExtUtils::Typemaps> subclass that stores the object just like C<T_MAGIC> does, but additionally attaches a magic vtable (type C<MGVTBL>) with the name C<${type}_magic> (e.g. C<Foo__Bar_magic> for a value of type C<Foo::Bar>) to the value. This is mainly useful for adding C<free> (destruction) and C<dup> (thread cloning) callbacks. The details of how these work is explained in L<perlguts|perlguts>, but it might look something like this:
+C<ExtUtils::Typemaps::MagicExt> is an C<ExtUtils::Typemaps> subclass that stores the object just like C<T_MAGIC> does, but additionally attaches a magic vtable (type C<MGVTBL>) with the name C<${type}_magic> (e.g. C<My__Object_magic> for a value of type C<My::Object>) to the value. This is mainly useful for adding C<free> (destruction) and C<dup> (thread cloning) callbacks. The details of how these work is explained in L<perlguts|perlguts>, but it might look something like this:
 
  static int object_dup(pTHX_ MAGIC* magic, CLONE_PARAMS* params) {
-     object_refcount_increment((struct Object*)magic->mg_ptr);
+     struct Object* object = (struct Object*)magic->mg_ptr;
+     object_refcount_increment(object);
      return 0;
  }
 
  static int object_free(pTHX_ SV* sv, MAGIC* magic) {
-     object_refcount_decrement((struct Object*)magic->mg_ptr);
+     struct Object* object = (struct Object*)magic->mg_ptr;
+     object_refcount_decrement(object);
      return 0;
  }
-
- static const MGVTBL My__Object_magic = { NULL, NULL, NULL, NULL, object_free, NULL, object_dup, NULL };
 
 This is useful to create objects that handle thread cloning correctly and effectively. If the object may be destructed by another thread, it should be allocated with the C<PerlSharedMem_malloc> family of allocators.
 

@@ -1,6 +1,7 @@
 Revision history for ExtUtils-Typemaps-Magic
 
 {{$NEXT}}
+          - Refactor Synopses to be more useful to end-users
 
 0.005     2024-06-12 23:15:22+02:00 Europe/Brussels
           - Clarify ppport usage in docs
