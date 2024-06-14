@@ -17,15 +17,15 @@ sub new {
 	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_find(SvRV($arg), PERL_MAGIC_ext) : NULL;
 	%:end
 	if (magic)
-		$var = (${type})magic->mg_ptr;
+		$var = ($type)magic->mg_ptr;
 	else
-		Perl_croak(aTHX_ \"${ntype} object is lacking magic\");
+		Perl_croak(aTHX_ \"$ntype object is lacking magic\");
 	}
 END
 
 	$self->add_outputmap(xstype => 'T_MAGICEXT', code => <<'END');
 	{
-	MAGIC* magic = sv_magicext(newSVrv($arg, \"${ntype}\"), NULL, PERL_MAGIC_ext, &${type}_magic, (const char*)$var, 0);
+	MAGIC* magic = sv_magicext(newSVrv($arg, "$ntype"), NULL, PERL_MAGIC_ext, &${type}_magic, (const char*)$var, 0);
 	magic->mg_flags |= MGf_COPY|MGf_DUP;
 	}
 END
