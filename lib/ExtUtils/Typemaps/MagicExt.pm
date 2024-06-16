@@ -64,7 +64,7 @@ In your XS:
 
 =head1 DESCRIPTION
 
-C<ExtUtils::Typemaps::MagicExt> is an C<ExtUtils::Typemaps> subclass that stores the object just like C<T_MAGIC> does, but additionally attaches a magic vtable (type C<MGVTBL>) with the name C<${type}_magic> (e.g. C<My__Object_magic> for a value of type C<My::Object>) to the value. This is mainly useful for adding C<free> (destruction) and C<dup> (thread cloning) callbacks. The details of how these work is explained in L<perlguts|perlguts>, but it might look something like this:
+C<ExtUtils::Typemaps::MagicExt> is a typemap bundle that provides C<T_MAGICEXT>, a typemap that stores the object just like C<T_MAGIC> does, but additionally attaches a magic vtable (type C<MGVTBL>) with the name C<${type}_magic> (e.g. C<My__Object_magic> for a value of type C<My::Object>) to the value. This is mainly useful for adding C<free> (destruction) and C<dup> (thread cloning) callbacks. The details of how these work is explained in L<perlguts|perlguts>, but it might look something like this:
 
  static int object_dup(pTHX_ MAGIC* magic, CLONE_PARAMS* params) {
      struct Object* object = (struct Object*)magic->mg_ptr;

@@ -50,7 +50,7 @@ In your XS:
 
 =head1 DESCRIPTION
 
-C<ExtUtils::Typemaps::MagicBuf> is an C<ExtUtils::Typemaps> subclass that is the equivalent of using a string reference to store your object in, except it is hidden away using magic. This is suitable for objects that can be safely shallow copied on thread cloning (i.e. they don't contain external references such as pointers or file descriptors). Unlike C<T_MAGIC> or C<T_PTROBJ> this does not need a C<DESTROY> method to free the buffer.
+C<ExtUtils::Typemaps::MagicBuf> is a typemap bundle that provides C<T_MAGICBUF>, a typemap for objects that uses a string reference to store your object in, except it is hidden away using magic. This is suitable for objects that can be safely shallow copied on thread cloning (i.e. they don't contain external references such as pointers or file descriptors). Unlike C<T_MAGIC> or C<T_PTROBJ> this does not need a C<DESTROY> method to free the buffer.
 
 =head1 DEPENDENCIES
 

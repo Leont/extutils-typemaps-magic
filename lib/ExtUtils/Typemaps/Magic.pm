@@ -50,7 +50,7 @@ In your XS:
 
 =head1 DESCRIPTION
 
-C<ExtUtils::Typemaps::Magic> is an C<ExtUtils::Typemaps> subclass that is essentially a drop-in replacement for C<T_PTROBJ>, except that it hides the value of the pointer from pure-perl code by storing it in attached magic. In particular that means the pointer won't be serialized/deserialized (this is usually a thing because after deserialization the pointer is probably not valid). Note that like C<T_PTROBJ>, you probably need a C<DESTROY> method to destroy and free the buffer, and this is not thread cloning safe without further measures.
+C<ExtUtils::Typemaps::Magic> is a typemap bundle that provides C<T_MAGIC>, a drop-in replacement for C<T_PTROBJ> except that it hides the value of the pointer from pure-perl code by storing it in attached magic. In particular that means the pointer won't be serialized/deserialized (this is usually a good thing because after deserialization the pointer is probably not valid). Note that like C<T_PTROBJ>, you probably need a C<DESTROY> method to destroy and free the buffer, and this is not thread cloning safe without further measures.
 
 =head1 DEPENDENCIES
 
