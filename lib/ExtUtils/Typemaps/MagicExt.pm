@@ -15,7 +15,7 @@ sub new {
 	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_findext(SvRV($arg), PERL_MAGIC_ext, &${type}_magic) : NULL;
 	%:else
 	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_find(SvRV($arg), PERL_MAGIC_ext) : NULL;
-	%:end
+	%:endif
 	if (magic)
 		$var = ($type)magic->mg_ptr;
 	else
