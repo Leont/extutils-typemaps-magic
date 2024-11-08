@@ -22,6 +22,16 @@ sub new {
 		Perl_croak(aTHX_ \"$ntype object is lacking magic\");
 	}
 END
+	$self->add_inputmap(xstype => 'T_MAGICEXT_BASE', code => <<'END');
+	{
+	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_find(SvRV($arg), PERL_MAGIC_ext) : NULL;
+	if (magic && magic->mg_virtual)
+		$var = ($type)magic->mg_ptr;
+	else
+		Perl_croak(aTHX_ \"$ntype object is lacking magic\");
+	}
+END
+
 
 	$self->add_outputmap(xstype => 'T_MAGICEXT', code => <<'END');
 	{
