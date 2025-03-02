@@ -49,7 +49,7 @@ sub minimum_pxs {
 
 1;
 
-# ABSTRACT: Typemap for storing objects in magic
+# ABSTRACT: Typemap for storing objects in magic pointer
 
 =head1 SYNOPSIS
 

@@ -30,7 +30,7 @@ END
 
 1;
 
-# ABSTRACT: Typemap for storing objects in magic
+# ABSTRACT: Typemap for storing objects in magic buffer
 
 =head1 SYNOPSIS
 
