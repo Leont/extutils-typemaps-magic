@@ -2,6 +2,7 @@ Revision history for ExtUtils-Typemaps-Magic
 
 {{$NEXT}}
           - Add T_MAGICEXT_BASE
+          - Revert "Soften dependency on mg_findext"
 
 0.007     2024-06-23 14:58:07+02:00 Europe/Brussels
           - Correct #endif for <5.14 compatibility
