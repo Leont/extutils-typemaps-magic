@@ -19,7 +19,7 @@ sub new {
 	}
 END
 
-	$self->add_outputmap(xstype => 'T_MAGICBUF', code => '	sv_magic(newSVrv($arg, "$ntype"), NULL, PERL_MAGIC_ext, (const char*)$var, sizeof(*$var));');
+	$self->add_outputmap(xstype => 'T_MAGICBUF', code => '	sv_magicext(newSVrv($arg, "$ntype"), NULL, PERL_MAGIC_ext, NULL, (const char*)$var, sizeof(*$var));');
 
 	return $self;
 }
