@@ -1,6 +1,7 @@
 Revision history for ExtUtils-Typemaps-Magic
 
 {{$NEXT}}
+          - Don't copy buffer when creating a T_MAGICBUF
           - Add T_MAGICEXT_BASE
           - Revert "Soften dependency on mg_findext"
 
