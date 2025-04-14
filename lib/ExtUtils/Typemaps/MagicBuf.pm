@@ -15,7 +15,7 @@ sub new {
 	if (magic)
 		$var = ($type)magic->mg_ptr;
 	else
-		Perl_croak(aTHX_ \"$ntype object is lacking magic\");
+		Perl_croak(aTHX_ \"%s object is lacking magic\", \"$ntype\");
 	}
 END
 
