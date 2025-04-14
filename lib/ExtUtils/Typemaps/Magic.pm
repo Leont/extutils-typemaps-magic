@@ -11,7 +11,8 @@ sub new {
 
 	$self->add_inputmap(xstype => 'T_MAGIC', code => <<'END');
 	{
-	MAGIC* magic = SvROK($arg) && SvRMAGICAL(SvRV($arg)) ? mg_findext(SvRV($arg), PERL_MAGIC_ext, NULL) : NULL;
+	SV* arg = $arg;
+	MAGIC* magic = SvROK(arg) && SvRMAGICAL(SvRV(arg)) ? mg_findext(SvRV(arg), PERL_MAGIC_ext, NULL) : NULL;
 	if (magic)
 		$var = ($type)magic->mg_ptr;
 	else

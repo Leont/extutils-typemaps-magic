@@ -2,6 +2,7 @@ Revision history for ExtUtils-Typemaps-Magic
 
 {{$NEXT}}
           - Use SvRMAGICAL where appropriate
+          - Only evaluate $arg once in input maps
 
 0.008     2025-04-14 12:48:33+02:00 Europe/Brussels
           - Don't copy buffer when creating a T_MAGICBUF

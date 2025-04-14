@@ -11,7 +11,8 @@ sub new {
 
 	$self->add_inputmap(xstype => 'T_MAGICEXT', code => <<'END');
 	{
-	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_findext(SvRV($arg), PERL_MAGIC_ext, &${type}_magic) : NULL;
+	SV* arg = $arg;
+	MAGIC* magic = SvROK(arg) && SvMAGICAL(SvRV(arg)) ? mg_findext(SvRV(arg), PERL_MAGIC_ext, &${type}_magic) : NULL;
 	if (magic)
 		$var = ($type)magic->mg_ptr;
 	else
@@ -20,7 +21,8 @@ sub new {
 END
 	$self->add_inputmap(xstype => 'T_MAGICEXT_BASE', code => <<'END');
 	{
-	MAGIC* magic = SvROK($arg) && SvMAGICAL(SvRV($arg)) ? mg_find(SvRV($arg), PERL_MAGIC_ext) : NULL;
+	SV* arg = $arg;
+	MAGIC* magic = SvROK(arg) && SvMAGICAL(SvRV(arg)) ? mg_find(SvRV(arg), PERL_MAGIC_ext) : NULL;
 	if (magic && magic->mg_virtual)
 		$var = ($type)magic->mg_ptr;
 	else
