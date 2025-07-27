@@ -34,7 +34,7 @@ END
 	$self->add_outputmap(xstype => 'T_MAGICEXT', code => <<'END');
 	{
 	MAGIC* magic = sv_magicext(newSVrv($arg, "$ntype"), NULL, PERL_MAGIC_ext, &${type}_magic, (const char*)$var, 0);
-	magic->mg_flags |= MGf_COPY|MGf_DUP;
+	magic->mg_flags |= MGf_DUP;
 	}
 END
 
