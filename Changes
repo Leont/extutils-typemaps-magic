@@ -1,6 +1,7 @@
 Revision history for ExtUtils-Typemaps-Magic
 
 {{$NEXT}}
+          - Add *_magic and *_arg extra variables to input maps
 
 0.009     2025-07-08 20:18:30+02:00 Europe/Brussels
           - Use SvRMAGICAL where appropriate
